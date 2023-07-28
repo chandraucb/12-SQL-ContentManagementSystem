@@ -1,7 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-const Main = require('./lib/main')
-
+const Main = require('./model/main')
 
 const showPrompt = function () {
     const actions = ['View All Employees', 
@@ -33,16 +32,17 @@ const showPrompt = function () {
         switch (data.action) {
             case 'View All Employees':
                 console.log(data.action)
+                await main.getAllEmployee()
                 break
             case 'Add Employee':
                 console.log(data.action)
                 break
             case 'Update Employee Role':
                 console.log(data.action)
-                await main.getAllEmployee()
                 break
             case 'View All Roles':
                 console.log(data.action)
+                await main.getRoles()
                 break
             case 'Add Role':
                 console.log(data.action)
@@ -59,7 +59,6 @@ const showPrompt = function () {
         }
 
         showPrompt()
-        //console.log('Display end of function')
 
     });
 }

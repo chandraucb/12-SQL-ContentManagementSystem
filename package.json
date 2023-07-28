@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"test":"jest"
+		"test":"jest --forceExit"
 	},
 	"dependencies": {
 		"console.table": "^0.10.0",
