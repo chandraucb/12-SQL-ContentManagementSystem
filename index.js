@@ -1,6 +1,39 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-const Main = require('./model/main')
+const Main = require('./lib/main')
+
+const main = new Main()
+
+//Add Department Inquirer Prompts
+const addDepartment = function () {
+    return inquirer.prompt([
+
+        {
+          type: 'input',
+          message: 'What is the name of the department?',
+          name: 'department',
+        }
+
+    ]).then(async (data) => {
+        if (data.department)
+            await main.addDepartment(data.department)
+    })
+}
+
+const addRole = function () {
+    return inquirer.prompt([
+
+        {
+          type: 'input',
+          message: 'What is the name of the department?',
+          name: 'department',
+        }
+
+    ]).then(async (data) => {
+        if (data.department)
+            await main.addDepartment(data.department)
+    })
+}
 
 const showPrompt = function () {
     const actions = ['View All Employees', 
@@ -27,8 +60,6 @@ const showPrompt = function () {
             process.exit()
         }
 
-        const main = new Main()
-
         switch (data.action) {
             case 'View All Employees':
                 console.log(data.action)
@@ -52,6 +83,7 @@ const showPrompt = function () {
                 await main.getDepartment()
                 break
             case 'Add Department':
+                await addDepartment()
                 console.log(data.action)
                 break
             default:

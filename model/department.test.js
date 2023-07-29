@@ -5,4 +5,9 @@ describe('Department Model Test', () => {
         const department = new Department()
         await department.getDepartments()
       });
+
+      test('Add Departments', async () => {
+        const department = new Department()
+        await department.addDepartment('Human Resource')
+      });
 });

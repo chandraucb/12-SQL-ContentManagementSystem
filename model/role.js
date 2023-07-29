@@ -1,5 +1,5 @@
 const db = require('../config/connection')
-const util = require('./util')
+const util = require('../lib/util')
 
 class Role {
     async getRoles() {
@@ -8,8 +8,12 @@ class Role {
         util.formatSQLResult(results[0])
     }
 
-    async close() {
-        db.end()
+    async addRole(data) {
+
+        const query = 'INSERT INTO ROLE (title, salary,department_id) VALUES (?,?,?)'
+        const results = await db.promise().query(query,[data.title, data.salary, data.department_id])
+        //util.formatSQLResult(results[0])
+
     }
 }
 
