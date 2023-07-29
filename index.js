@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const Main = require('./lib/main')
+const util = require('./lib/util')
 
 const main = new Main()
 
@@ -20,20 +21,87 @@ const addDepartment = function () {
     })
 }
 
-const addRole = function () {
+//AddRole Prompt
+const addRole = async function () {
+
+    const departments = (await main.getDepartment())[0]
     return inquirer.prompt([
 
         {
           type: 'input',
-          message: 'What is the name of the department?',
-          name: 'department',
-        }
+          message: 'What is the title of the role?',
+          name: 'title',
+        },{
+            type: 'input',
+            message: 'What is the salary of the role?',
+            name: 'salary',
+        },{
+            type: 'list',
+            message: 'What department does the role belong to?',
+            name: 'department_name',
+            choices: departments ,
+        },
 
     ]).then(async (data) => {
-        if (data.department)
-            await main.addDepartment(data.department)
+        //find department id for selected department by name
+        const selectDep = departments.filter( dep => {
+            return dep.name === data.department_name
+        })
+        data.department_id = selectDep[0].id
+        await main.addRole(data)
     })
 }
+
+//AddEmployee Prompt
+const addEmployee = async function () {
+
+    const roles = (await main.getRoles())[0]
+    const rolesList = roles.map( (role) => {
+        return role.title 
+    })
+    const employees = (await main.getAllEmployee())[0]
+    const managersList = ['None',...employees.map( (employee) => {
+        return employee.first_name + ' ' + employee.last_name
+    })]
+
+    return inquirer.prompt([
+        {
+          type: 'input',
+          message: "What is the employee's first name?",
+          name: 'first_name',
+        },{
+            type: 'input',
+            message:  "What is the employee's last name?",
+            name: 'last_name',
+        },{
+            type: 'list',
+            message:"What is the employee's role?",
+            name: 'role_name',
+            choices: rolesList ,
+        },{
+            type: 'list',
+            message:"Who is the employee's manager?",
+            name: 'manager_name',
+            choices: managersList ,
+        },
+
+    ]).then(async (data) => {
+        //find role id for selected role by name
+        const selectedRole = roles.filter( role => {
+            return role.title === data.role_name
+        })
+        data.role_id = selectedRole[0].id
+
+        //find manager emp id for selected manager by name
+        const selectedEmp = employees.filter( emp => {
+            return emp.first_name + ' ' + emp.last_name === data.manager_name
+        })
+        data.manager_id = selectedEmp[0]?selectedEmp[0].id:null
+        await main.addEmployee(data)
+    })
+}
+
+//Update Employee
 
 const showPrompt = function () {
     const actions = ['View All Employees', 
@@ -62,29 +130,27 @@ const showPrompt = function () {
 
         switch (data.action) {
             case 'View All Employees':
-                console.log(data.action)
-                await main.getAllEmployee()
+                const empResult = await main.getAllEmployee()
+                util.formatSQLResult(empResult[0])
                 break
             case 'Add Employee':
-                console.log(data.action)
+                await addEmployee()
                 break
             case 'Update Employee Role':
-                console.log(data.action)
                 break
             case 'View All Roles':
-                console.log(data.action)
-                await main.getRoles()
+                const rolesResult = await main.getRoles()
+                util.formatSQLResult(rolesResult[0])
                 break
             case 'Add Role':
-                console.log(data.action)
+                await addRole()
                 break
             case 'View All Departments':
-                console.log(data.action)
-                await main.getDepartment()
+                const depResults = await main.getDepartment()
+                util.formatSQLResult(depResults[0])
                 break
             case 'Add Department':
                 await addDepartment()
-                console.log(data.action)
                 break
             default:
                 break
