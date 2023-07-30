@@ -102,7 +102,47 @@ const addEmployee = async function () {
 }
 
 //Update Employee
+const updateEmployeeRole = async function () {
 
+    const roles = (await main.getRoles())[0]
+    const rolesList = roles.map( (role) => {
+        return role.title 
+    })
+    const employees = (await main.getAllEmployee())[0]
+    const employeeList = employees.map( (employee) => {
+        return employee.first_name + ' ' + employee.last_name
+    })
+
+    return inquirer.prompt([
+        {
+            type: 'list',
+            message:"Who is the employee's manager?",
+            name: 'emp_name',
+            choices: employeeList ,
+        },{
+            type: 'list',
+            message:"What is the employee's role?",
+            name: 'role_name',
+            choices: rolesList ,
+        },
+
+    ]).then(async (data) => {
+        //find role id for selected role by name
+        const selectedRole = roles.filter( role => {
+            return role.title === data.role_name
+        })
+        data.role_id = selectedRole[0].id
+
+        //find manager emp id for selected manager by name
+        const selectedEmp = employees.filter( emp => {
+            return emp.first_name + ' ' + emp.last_name === data.emp_name
+        })
+        data.id = selectedEmp[0]?selectedEmp[0].id:null
+        await main.updateEmployeeRole(data)
+    })
+}
+
+//Show main prompt
 const showPrompt = function () {
     const actions = ['View All Employees', 
                 'Add Employee', 
@@ -137,6 +177,7 @@ const showPrompt = function () {
                 await addEmployee()
                 break
             case 'Update Employee Role':
+                await updateEmployeeRole()
                 break
             case 'View All Roles':
                 const rolesResult = await main.getRoles()

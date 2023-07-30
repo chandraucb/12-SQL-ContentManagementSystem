@@ -12,6 +12,14 @@ class Employee {
         const results = await db.promise().query(query,[data.first_name, data.last_name, data.role_id,data.manager_id])
         console.log ('Employee ' + data.first_name + ' ' + data.last_name + ' added successfully!')
     }
+
+    async updateEmployeeRole(data) {
+        const query = 'UPDATE EMPLOYEE SET role_id = ? WHERE id = ? '
+        const results = await db.promise().query(query,[data.role_id, data.id])
+        console.log ('Employee ' + data.emp_name + ' role updated successfully!')
+    }
 }
+
+
 
 module.exports=Employee
