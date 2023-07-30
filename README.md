@@ -16,7 +16,7 @@ A command-line application to manage a company's employee database built using N
 ## Installation
 Clone the github repo as shown below, <br/><br/> ``` git clone git@github.com:chandraucb/12-SQL-ContentManagementSystem.git ``` <br/><br/> Run node package install <br/><br/> ``` npm install ```
 
-Execute schema.sql and seeds.sql in mysql instances and update db connection details within config/connection.js to point your database.
+Execute schema.sql and seeds.sql in your mysql database and update db connection details within config/connection.js to point your database.
 
 ## Usage
 To run this application execute below command and follow the prompts <br/><br/> ```node index.js ``` <br/> <br/> ![videodemo](./asset/images/video_demo.gif) 
